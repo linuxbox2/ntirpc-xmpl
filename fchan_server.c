@@ -491,7 +491,7 @@ fchan_prog_1(struct svc_req *req, register SVCXPRT *xprt)
 		return;
 	}
 	memset ((char *)&argument, 0, sizeof (argument));
-	if (!svc_getargs (xprt, (xdrproc_t) _xdr_argument, (caddr_t) &argument)) {
+	if (!svc_getargs (xprt, req, _xdr_argument, (caddr_t) &argument, NULL)) {
             svcerr_decode(xprt, req);
 		return;
 	}

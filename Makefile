@@ -31,15 +31,16 @@ OBJECTS_MISC = $(SOURCES_MISC.c:%.c=%.o) $(TARGETS_MISC.c:%.c=%.o)
 OBJECTS_BLAST = $(SOURCES_BLAST.c:%.c=%.o) $(TARGETS_BLAST.c:%.c=%.o)
 
 # Compiler flags 
-CUNIT=/opt/CUnit
-TIRPC = /home/matt/nfs-ganesha/src/libtirpc
+CUNIT=/usr/local
+TIRPC=/root/dev/ntirpc
+KRB5=/opt/ganesha
 
 CPPFLAGS += -D_REENTRANT
 CFLAGS += -g3 -O0 -fPIC -DPIC -I$(TIRPC)/tirpc/ -I$(CUNIT)/include \
 	-D_REENTRANT -DRPC_DUPLEX
-LDFLAGS += -L$(CUNIT)/lib $(TIRPC)/src/.libs/libntirpc.a \
-	-lcunit -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err -lpthread \
-	-lc -lrt -lgssglue
+LDFLAGS += -L$(CUNIT)/lib -L$(KRB5)/lib $(TIRPC)/src/.libs/libntirpc.a \
+	-lcunit  -lgssglue -lgssapi_krb5 -lkrb5 -lk5crypto -lkrb5support \
+	 -lcom_err -lpthread -lc -lrt
 RPCGENFLAGS = -C -M 
 
 # Targets 
@@ -74,7 +75,7 @@ $(DUPLEX_UNIT) : $(OBJECTS_UNIT) $(OBJECTS_MISC)
 	$(LINK.c) -o $(DUPLEX_UNIT) $(OBJECTS_UNIT) $(OBJECTS_MISC) $(LDFLAGS)
 
  clean:
-	 $(RM) core Makefile.fchan Makefile.bchan \
+	$(RM) core Makefile.fchan Makefile.bchan \
 	$(OBJECTS_CLNT) $(OBJECTS_SVC) $(OBJECTS_UNIT) \
 	$(CLIENT) $(SERVER) $(DUPLEX_UNIT)
 
